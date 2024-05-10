@@ -1,12 +1,12 @@
 #pragma once
 
-#include <bitset>
+#include <cstdint>
 
 namespace brew65emu::components
 {
     class IO_Decoder
     {
     public:
-        void update(std::bitset<8> &io_bus, const std::bitset<16> &addr_bus);
+        void update(uint8_t &io_bus, uint16_t addr_bus);
     };
 }

@@ -1,18 +1,17 @@
 #pragma once
 
 #include <vector>
-#include <bitset>
 
 namespace brew65emu::components
 {
     class Memory
     {
     public:
-        void update(std::bitset<8> &data_bus, const std::bitset<16> &addr_bus, bool write_enable, bool output_enable);
-        void update_bank(const std::bitset<16> &addr_bus, const std::bitset<8> &data_bus, const std::bitset<8> &io_bus, bool irq, bool reset);
+        void update(uint8_t &data_bus, uint16_t addr_bus, bool write_enable, bool output_enable);
+        void update_bank(uint16_t addr_bus, uint8_t data_bus, uint8_t io_bus, bool irq, bool reset);
 
-        const std::vector<uint8_t> &get_ram();
-        const std::vector<uint8_t> &get_flash();
+        std::vector<uint8_t> &get_ram();
+        std::vector<uint8_t> &get_flash();
         int get_active_bank();
         bool is_in_irq_or_reset();
 

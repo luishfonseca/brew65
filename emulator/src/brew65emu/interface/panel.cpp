@@ -1,7 +1,5 @@
 #include <brew65emu/interface/panel.h>
 
-#include <bitset>
-
 using namespace brew65emu::interface;
 
 void Panel::init()
@@ -35,14 +33,14 @@ void Panel::update_pc(int pc)
         {
             for (int k = 0; k < 8; k++)
             {
-                this->renderer.update_pixel(pixels, k + 8 * i, j, pc & (0b01 << i) ? 0xFFFF0000 : 0xFF000000);
+                this->renderer.update_pixel(pixels, k + 8 * i, j, pc & (1 << i) ? 0xFFFF0000 : 0xFF000000);
             }
         }
     }
     this->renderer.update_end();
 }
 
-void Panel::update_addr_bus(const std::bitset<16> &addr_bus)
+void Panel::update_addr_bus(uint16_t addr_bus)
 {
     uint32_t *pixels;
     this->renderer.update_start(&pixels, 1028, 16, 128, 8);
@@ -52,14 +50,14 @@ void Panel::update_addr_bus(const std::bitset<16> &addr_bus)
         {
             for (int k = 0; k < 8; k++)
             {
-                this->renderer.update_pixel(pixels, k + 8 * i, j, addr_bus[i] ? 0xFF00FF00 : 0xFF000000);
+                this->renderer.update_pixel(pixels, k + 8 * i, j, addr_bus & (1 << i) ? 0xFF00FF00 : 0xFF000000);
             }
         }
     }
     this->renderer.update_end();
 }
 
-void Panel::update_data_bus(const std::bitset<8> &data_bus)
+void Panel::update_data_bus(uint8_t data_bus)
 {
     uint32_t *pixels;
     this->renderer.update_start(&pixels, 1028, 28, 128, 16);
@@ -69,14 +67,14 @@ void Panel::update_data_bus(const std::bitset<8> &data_bus)
         {
             for (int k = 0; k < 16; k++)
             {
-                this->renderer.update_pixel(pixels, k + 16 * i, j, data_bus[i] ? 0xFF0000FF : 0xFF000000);
+                this->renderer.update_pixel(pixels, k + 16 * i, j, data_bus & (1 << i) ? 0xFF0000FF : 0xFF000000);
             }
         }
     }
     this->renderer.update_end();
 }
 
-void Panel::update_io_bus(const std::bitset<8> &io_bus)
+void Panel::update_io_bus(uint8_t io_bus)
 {
     uint32_t *pixels;
     this->renderer.update_start(&pixels, 1028, 306, 128, 16);
@@ -86,7 +84,7 @@ void Panel::update_io_bus(const std::bitset<8> &io_bus)
         {
             for (int k = 0; k < 16; k++)
             {
-                this->renderer.update_pixel(pixels, k + 16 * i, j, io_bus[i] ? 0xFF00FF00 : 0xFF000000);
+                this->renderer.update_pixel(pixels, k + 16 * i, j, io_bus & (1 << i) ? 0xFF00FF00 : 0xFF000000);
             }
         }
     }
