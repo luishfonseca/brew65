@@ -10,5 +10,5 @@ target_sources(brew65emu PRIVATE
 
 add_executable(emulator main.cpp)
 target_compile_options(emulator PUBLIC -sUSE_SDL=2)
-target_link_options(emulator PUBLIC -sUSE_SDL=2 -sMINIFY_HTML=0)
+target_link_options(emulator PUBLIC -sUSE_SDL=2 -sMINIFY_HTML=0 --shell-file ${CMAKE_CURRENT_SOURCE_DIR}/shell.html)
 target_link_libraries(emulator brew65emu)
