@@ -1,0 +1,14 @@
+add_library(brew65emu)
+target_include_directories(brew65emu PUBLIC ../include)
+target_sources(brew65emu PRIVATE
+    brew65emu/components/io_decoder.cpp
+    brew65emu/components/memory.cpp
+
+    brew65emu/interface/panel.cpp
+    brew65emu/interface/renderer.cpp
+)
+
+add_executable(emulator main.cpp)
+target_compile_options(emulator PUBLIC -sUSE_SDL=2)
+target_link_options(emulator PUBLIC -sUSE_SDL=2 -sMINIFY_HTML=0)
+target_link_libraries(emulator brew65emu)
