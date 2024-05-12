@@ -94,11 +94,49 @@ int main(int argc, char *argv[])
 
     panel.init();
 
-    for (int i = 0; i < 64 * 1024; i++)
-    {
-        DATA_BUS = rand();
-        memory.update(DATA_BUS, i, true, false);
-    }
+    // RESET Vector
+    memory.write(0xFFFC, 0x00);
+    memory.write(0xFFFD, 0x80);
+
+    // LDX #$01
+    memory.write(0x8000, 0xA2);
+    memory.write(0x8001, 0x01);
+
+    // STX $00
+    memory.write(0x8002, 0x86);
+    memory.write(0x8003, 0x00);
+
+    // LDA #$02
+    memory.write(0x8004, 0xA9);
+    memory.write(0x8005, 0x02);
+
+    // STA $01
+    memory.write(0x8006, 0x85);
+    memory.write(0x8007, 0x01);
+
+    // CLC
+    memory.write(0x8008, 0x18);
+
+    // LDX $01
+    memory.write(0x8009, 0xA6);
+    memory.write(0x800A, 0x01);
+
+    // ADC $00
+    memory.write(0x800B, 0x65);
+    memory.write(0x800C, 0x00);
+
+    // STX $00
+    memory.write(0x800D, 0x86);
+    memory.write(0x800E, 0x00);
+
+    // STA $01
+    memory.write(0x800F, 0x85);
+    memory.write(0x8010, 0x01);
+
+    // JMP $8009
+    memory.write(0x8011, 0x4C);
+    memory.write(0x8012, 0x09);
+    memory.write(0x8013, 0x80);
 
     reset();
     panel_update();
