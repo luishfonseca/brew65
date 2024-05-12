@@ -84,6 +84,10 @@ void update()
 
 int main(int argc, char *argv[])
 {
+#ifndef NDEBUG
+    EM_ASM(console.log("Table: ", wasmTable););
+#endif
+
     panel.init();
 
     for (int i = 0; i < 64 * 1024; i++)
