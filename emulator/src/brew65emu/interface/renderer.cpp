@@ -27,19 +27,14 @@ Renderer::Renderer(int w, int h)
         throw std::runtime_error("SDL_CreateRenderer failed");
     }
 
-    this->texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, w, h);
+    this->texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, w, h);
     if (texture == nullptr)
     {
         throw std::runtime_error("SDL_CreateTexture failed");
     }
 
-    uint32_t *pixels;
-    this->update_start(&pixels, 0, 0, w, h);
-    for (int i = 0; i < w * h; i++)
-    {
-        pixels[i] = 0xFF000000;
-    }
-    this->update_end();
+    std::vector<uint8_t> pixels(w * h, 0);
+    this->draw_pixels(pixels.data(), 0, 0, w, h);
 }
 
 Renderer::~Renderer()
@@ -49,29 +44,40 @@ Renderer::~Renderer()
     SDL_Quit();
 }
 
-void Renderer::update_start(uint32_t **pixels, int x, int y, int w, int h)
+void Renderer::draw_pixels(const uint8_t *pixels, int x, int y, int w, int h)
 {
-    auto lockArea = SDL_Rect{x, y, w, h};
+    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormatFrom((void *)pixels, w, h, 8, w, SDL_PIXELFORMAT_RGB332);
+    draw_surface(surface, x, y);
 
-    void *texturePixels;
-    int pitch;
-    SDL_LockTexture(this->texture, &lockArea, &texturePixels, &pitch);
-
-    *pixels = reinterpret_cast<uint32_t *>(texturePixels);
+    SDL_FreeSurface(surface);
 }
 
-void Renderer::update_pixel(uint32_t *pixels, int x, int y, uint32_t color)
+void Renderer::draw_pixels(const uint32_t *pixels, int x, int y, int w, int h)
 {
-    pixels[y * this->w + x] = color;
+    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormatFrom((void *)pixels, w, h, 32, w, SDL_PIXELFORMAT_ARGB8888);
+    draw_surface(surface, x, y);
+
+    SDL_FreeSurface(surface);
 }
 
-void Renderer::update_end()
+void Renderer::draw_surface(SDL_Surface *surface, int x, int y)
 {
-    SDL_UnlockTexture(this->texture);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(this->renderer, surface);
+    if (texture == nullptr)
+    {
+        throw std::runtime_error("SDL_CreateTextureFromSurface failed");
+    }
+
+    SDL_Rect rect = {x, y, surface->w, surface->h};
+    SDL_SetRenderTarget(this->renderer, this->texture);
+    SDL_RenderCopy(this->renderer, texture, nullptr, &rect);
+
+    SDL_DestroyTexture(texture);
 }
 
 void Renderer::render()
 {
+    SDL_SetRenderTarget(this->renderer, nullptr);
     SDL_RenderCopy(this->renderer, this->texture, nullptr, nullptr);
     SDL_RenderPresent(this->renderer);
 }

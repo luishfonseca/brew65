@@ -11,13 +11,14 @@ namespace brew65emu::interface
         Renderer(int w, int h);
         ~Renderer();
 
-        void update_start(uint32_t **pixels, int x, int y, int w, int h);
-        void update_pixel(uint32_t *pixels, int x, int y, uint32_t color);
-        void update_end();
+        void draw_pixels(const uint8_t *pixels, int x, int y, int w, int h);
+        void draw_pixels(const uint32_t *pixels, int x, int y, int w, int h);
 
         void render();
 
     private:
+        void draw_surface(SDL_Surface *surface, int x, int y);
+
         int w, h;
 
         SDL_Renderer *renderer;
