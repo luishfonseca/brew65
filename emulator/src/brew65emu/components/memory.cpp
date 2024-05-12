@@ -39,6 +39,18 @@ void Memory::update(uint8_t &data_bus, uint16_t addr_bus, bool write_enable, boo
     }
 }
 
+uint8_t Memory::read(uint16_t addr)
+{
+    uint8_t data_bus = 0;
+    this->update(data_bus, addr, false, true);
+    return data_bus;
+}
+
+void Memory::write(uint16_t addr, uint8_t data)
+{
+    this->update(data, addr, true, false);
+}
+
 void Memory::update_bank(uint16_t addr_bus, uint8_t data_bus, uint8_t io_bus, bool irq, bool reset)
 {
     if ((irq || reset) && !this->irq_reset)
@@ -60,12 +72,12 @@ void Memory::update_bank(uint16_t addr_bus, uint8_t data_bus, uint8_t io_bus, bo
     }
 }
 
-std::vector<uint8_t> &Memory::get_ram()
+const uint8_t *Memory::get_ram()
 {
     return this->ram;
 }
 
-std::vector<uint8_t> &Memory::get_flash()
+const uint8_t *Memory::get_flash()
 {
     return this->flash;
 }

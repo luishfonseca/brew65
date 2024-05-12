@@ -1,6 +1,4 @@
-[submodule "build/emulator/lib/6502"]
-	path = build/emulator/lib/6502
-	url = git@github.com:visrealm/vrEmu6502.git
 [submodule "emulator/lib/6502"]
 	path = emulator/lib/6502
-	url = git@github.com:visrealm/vrEmu6502.git
+	url = git@github.com:gianlucag/mos6502
+    branch = master
