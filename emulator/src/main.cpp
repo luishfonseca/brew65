@@ -8,7 +8,7 @@
 #include <emscripten.h>
 #include <iostream>
 
-brew65emu::interface::Renderer renderer(1280, 728);
+brew65emu::interface::Renderer renderer(1280, 728, "/assets/PixelOperator-Bold.ttf");
 brew65emu::interface::Panel panel(renderer);
 
 brew65emu::components::IO_Decoder io_decoder;
@@ -95,10 +95,6 @@ void update()
 
 int main(int argc, char *argv[])
 {
-#ifndef NDEBUG
-    EM_ASM(console.log("Table: ", wasmTable););
-#endif
-
     panel.init();
 
     // RESET Vector
