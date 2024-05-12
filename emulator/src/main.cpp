@@ -59,8 +59,12 @@ void nmi()
 
 void panel_update()
 {
-
-    panel.update_pc(PC);
+    panel.update_pc(cpu.GetPC());
+    panel.update_sp(cpu.GetS());
+    panel.update_a(cpu.GetA());
+    panel.update_x(cpu.GetX());
+    panel.update_y(cpu.GetY());
+    panel.update_status(cpu.GetP());
     panel.update_addr_bus(ADDR_BUS);
     panel.update_data_bus(DATA_BUS);
     panel.update_io_bus(IO_BUS);

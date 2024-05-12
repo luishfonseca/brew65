@@ -23,7 +23,7 @@ void Panel::init()
     this->renderer.update_end();
 }
 
-void Panel::update_pc(int pc)
+void Panel::update_pc(uint16_t pc)
 {
     uint32_t *pixels;
     this->renderer.update_start(&pixels, 1028, 4, 128, 8);
@@ -33,7 +33,75 @@ void Panel::update_pc(int pc)
         {
             for (int k = 0; k < 8; k++)
             {
-                this->renderer.update_pixel(pixels, k + 8 * i, j, pc & (1 << i) ? 0xFFFF0000 : 0xFF000000);
+                this->renderer.update_pixel(pixels, k + 8 * i, j, pc & (0x8000 >> i) ? 0xFFFF0000 : 0xFF000000);
+            }
+        }
+    }
+    this->renderer.update_end();
+}
+
+void Panel::update_sp(uint8_t sp)
+{
+    uint32_t *pixels;
+    this->renderer.update_start(&pixels, 1028, 16, 128, 16);
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 16; j++)
+        {
+            for (int k = 0; k < 16; k++)
+            {
+                this->renderer.update_pixel(pixels, k + 16 * i, j, sp & (0x80 >> i) ? 0xFFFF0000 : 0xFF000000);
+            }
+        }
+    }
+    this->renderer.update_end();
+}
+
+void Panel::update_a(uint8_t a)
+{
+    uint32_t *pixels;
+    this->renderer.update_start(&pixels, 1028, 36, 128, 16);
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 16; j++)
+        {
+            for (int k = 0; k < 16; k++)
+            {
+                this->renderer.update_pixel(pixels, k + 16 * i, j, a & (0x80 >> i) ? 0xFF0000FF : 0xFF000000);
+            }
+        }
+    }
+    this->renderer.update_end();
+}
+
+void Panel::update_x(uint8_t x)
+{
+    uint32_t *pixels;
+    this->renderer.update_start(&pixels, 1028, 56, 128, 16);
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 16; j++)
+        {
+            for (int k = 0; k < 16; k++)
+            {
+                this->renderer.update_pixel(pixels, k + 16 * i, j, x & (0x80 >> i) ? 0xFF0000FF : 0xFF000000);
+            }
+        }
+    }
+    this->renderer.update_end();
+}
+
+void Panel::update_y(uint8_t y)
+{
+    uint32_t *pixels;
+    this->renderer.update_start(&pixels, 1028, 76, 128, 16);
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 16; j++)
+        {
+            for (int k = 0; k < 16; k++)
+            {
+                this->renderer.update_pixel(pixels, k + 16 * i, j, y & (0x80 >> i) ? 0xFF0000FF : 0xFF000000);
             }
         }
     }
@@ -43,14 +111,14 @@ void Panel::update_pc(int pc)
 void Panel::update_addr_bus(uint16_t addr_bus)
 {
     uint32_t *pixels;
-    this->renderer.update_start(&pixels, 1028, 16, 128, 8);
+    this->renderer.update_start(&pixels, 1028, 96, 128, 8);
     for (int i = 0; i < 16; i++)
     {
         for (int j = 0; j < 8; j++)
         {
             for (int k = 0; k < 8; k++)
             {
-                this->renderer.update_pixel(pixels, k + 8 * i, j, addr_bus & (1 << i) ? 0xFF00FF00 : 0xFF000000);
+                this->renderer.update_pixel(pixels, k + 8 * i, j, addr_bus & (0x8000 >> i) ? 0xFF00FF00 : 0xFF000000);
             }
         }
     }
@@ -60,14 +128,14 @@ void Panel::update_addr_bus(uint16_t addr_bus)
 void Panel::update_data_bus(uint8_t data_bus)
 {
     uint32_t *pixels;
-    this->renderer.update_start(&pixels, 1028, 28, 128, 16);
+    this->renderer.update_start(&pixels, 1028, 108, 128, 16);
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 16; j++)
         {
             for (int k = 0; k < 16; k++)
             {
-                this->renderer.update_pixel(pixels, k + 16 * i, j, data_bus & (1 << i) ? 0xFF0000FF : 0xFF000000);
+                this->renderer.update_pixel(pixels, k + 16 * i, j, data_bus & (0x80 >> i) ? 0xFF0000FF : 0xFF000000);
             }
         }
     }
@@ -77,24 +145,24 @@ void Panel::update_data_bus(uint8_t data_bus)
 void Panel::update_io_bus(uint8_t io_bus)
 {
     uint32_t *pixels;
-    this->renderer.update_start(&pixels, 1028, 306, 128, 16);
+    this->renderer.update_start(&pixels, 1028, 386, 128, 16);
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 16; j++)
         {
             for (int k = 0; k < 16; k++)
             {
-                this->renderer.update_pixel(pixels, k + 16 * i, j, io_bus & (1 << i) ? 0xFF00FF00 : 0xFF000000);
+                this->renderer.update_pixel(pixels, k + 16 * i, j, io_bus & (0x80 >> i) ? 0xFF00FF00 : 0xFF000000);
             }
         }
     }
     this->renderer.update_end();
 }
 
-void Panel::update_ram(const std::vector<uint8_t> &ram)
+void Panel::update_ram(const uint8_t *ram)
 {
     uint32_t *pixels;
-    this->renderer.update_start(&pixels, 1028, 48, 128, 254);
+    this->renderer.update_start(&pixels, 1028, 128, 128, 254);
     for (int i = 0; i < 128; i++)
     {
         for (int j = 0; j < 254; j++)
@@ -110,10 +178,10 @@ void Panel::update_ram(const std::vector<uint8_t> &ram)
     this->renderer.update_end();
 }
 
-void Panel::update_bank(int bank, bool irq_reset, const std::vector<uint8_t> &ram, const std::vector<uint8_t> &flash)
+void Panel::update_bank(int bank, bool irq_reset, const uint8_t *ram, const uint8_t *flash)
 {
     uint32_t *pixels;
-    this->renderer.update_start(&pixels, 1028, 326, 128, 254);
+    this->renderer.update_start(&pixels, 1028, 406, 128, 254);
     for (int i = 0; i < 128; i++)
     {
         for (int j = 0; j < 254; j++)
@@ -127,7 +195,7 @@ void Panel::update_bank(int bank, bool irq_reset, const std::vector<uint8_t> &ra
     }
     this->renderer.update_end();
 
-    this->renderer.update_start(&pixels, 1028, 584, 128, 32);
+    this->renderer.update_start(&pixels, 1028, 664, 128, 32);
     for (int i = 0; i < 2; i++)
     {
         for (int j = 0; j < 8; j++)
@@ -143,4 +211,20 @@ void Panel::update_bank(int bank, bool irq_reset, const std::vector<uint8_t> &ra
         }
     }
     this->renderer.update_end();
+}
+
+void Panel::update_status(uint8_t status)
+{
+    uint32_t *pixels;
+    this->renderer.update_start(&pixels, 1028, 700, 128, 16);
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 16; j++)
+        {
+            for (int k = 0; k < 16; k++)
+            {
+                this->renderer.update_pixel(pixels, k + 16 * i, j, status & (0x80 >> i) ? 0xFFFF0000 : 0xFF000000);
+            }
+        }
+    }
 }
