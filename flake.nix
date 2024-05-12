@@ -16,7 +16,7 @@
           ninja
           python3
 
-          SDL2
+          cc65
         ];
 
         CMAKE_TOOLCHAIN_FILE = "${pkgs.emscripten}/share/emscripten/cmake/Modules/Platform/Emscripten.cmake";
