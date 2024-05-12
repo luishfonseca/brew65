@@ -1,6 +1,7 @@
 #include <brew65emu/interface/panel.h>
 #include <brew65emu/components/io_decoder.h>
 #include <brew65emu/components/memory.h>
+#include <brew65emu/tools/disassembler.h>
 
 #include <mos6502.h>
 
@@ -12,6 +13,9 @@ brew65emu::interface::Panel panel(renderer);
 
 brew65emu::components::IO_Decoder io_decoder;
 brew65emu::components::Memory memory;
+
+brew65emu::tools::Disassembler da([](uint16_t addr)
+                                  { return memory.read(addr); });
 
 uint8_t read(uint16_t addr);
 void write(uint16_t addr, uint8_t data);
@@ -82,6 +86,9 @@ void update()
 
     uint64_t c = 0;
     cpu.Run(1, c);
+
+    uint16_t next;
+    std::cout << da.disassemble_opcode(cpu.GetPC(), next) << std::endl;
 
     panel_update();
 }

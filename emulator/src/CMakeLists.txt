@@ -1,12 +1,12 @@
 add_library(brew65emu)
-target_link_libraries(brew65emu PUBLIC mos6502)
+target_link_libraries(brew65emu PUBLIC mos6502 da65)
 target_include_directories(brew65emu PUBLIC ../include)
 target_sources(brew65emu PRIVATE
     brew65emu/components/io_decoder.cpp
     brew65emu/components/memory.cpp
-
     brew65emu/interface/panel.cpp
     brew65emu/interface/renderer.cpp
+    brew65emu/tools/disassembler.cpp
 )
 
 add_executable(emulator main.cpp)

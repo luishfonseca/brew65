@@ -2,3 +2,6 @@
 	path = emulator/lib/6502
 	url = git@github.com:gianlucag/mos6502
     branch = master
+[submodule "emulator/lib/cc65"]
+	path = emulator/lib/cc65
+	url = git@github.com:cc65/cc65.git
